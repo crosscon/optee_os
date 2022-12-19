@@ -71,7 +71,7 @@ srcs-$(CFG_VERSAL_NVM) += versal_nvm.c
 srcs-$(CFG_VERSAL_SHA3_384) += versal_sha3_384.c
 srcs-$(CFG_VERSAL_PUF) += versal_puf.c
 srcs-$(CFG_VERSAL_HUK) += versal_huk.c
-
+srcs-$(CFG_RISCV_PLIC) += plic.c
 subdirs-y += crypto
 subdirs-$(CFG_BNXT_FW) += bnxt
 subdirs-$(CFG_DRIVERS_CLK) += clk
