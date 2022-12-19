@@ -64,6 +64,11 @@ void main_secondary_init_gic(void);
 void init_sec_mon(unsigned long nsec_entry);
 void init_tee_runtime(void);
 
+#if defined(CFG_RISCV_PLIC)
+void main_init_plic(void);
+void main_secondary_init_plic(void);
+#endif
+
 /* weak routines eventually overridden by platform */
 void plat_cpu_reset_early(void);
 void plat_primary_init_early(void);
