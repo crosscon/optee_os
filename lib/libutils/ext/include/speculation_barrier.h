@@ -502,7 +502,10 @@
   (__load_no_speculate (__ptr, __low, __high, __failval, __cmpptr))
 
 #else
-#error "No fallback provided for load_no_speculate"
+#warning "No load_no_speculate available. Using plain load."
+#define load_no_speculate_fail(__ptr, __low, __high, __failval) (*(__ptr))
+#define load_no_speculate(__ptr, __low, __high) (*(__ptr))
+#define load_no_speculate_cmp(__ptr, __low, __high, __failval, __cmpptr) (*(__ptr))
 #endif
 
 #endif
