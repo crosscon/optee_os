@@ -21,3 +21,8 @@ END_FUNC tlbi_mva_allasid
 FUNC tlbi_asid , :
 	sfence.vma	zero, a0
 END_FUNC tlbi_asid
+
+/* void tlbi_mva_asid(vaddr_t mva); */
+FUNC tlbi_mva_asid , :
+	sfence.vma	a0, a1
+END_FUNC tlbi_mva_asid
