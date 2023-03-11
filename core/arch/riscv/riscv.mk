@@ -72,7 +72,7 @@ core-platform-subdirs += \
 	$(addprefix $(arch-dir)/, kernel mm tee) $(platform-dir)
 
 # more convenient to move it to platform instead
-rv64-platform-cppflags += -mcmodel=medany -march=rv64imafd -mabi=lp64d
+rv64-platform-cppflags += -mcmodel=medany -march=rv64imafdzifencei -mabi=lp64d
 rv64-platform-cppflags += -Wno-missing-include-dirs
 
 rv64-platform-cppflags += -DRV64=1 -D__LP64__=1
