@@ -206,7 +206,7 @@ static void set_um_region(struct user_mode_ctx *uctx, struct vm_region *r)
 
 	assert(!mobj_is_paged(r->mobj));
 
-	core_mmu_set_info_table(&ti, CORE_MMU_PGDIR_LEVEL, 0, NULL);
+	core_mmu_set_info_table(&ti, CORE_MMU_PGDIR_LEVEL + 1, 0, NULL);
 
 	if (p) {
 		/* All the pgts are already allocated, update in place */
