@@ -11,6 +11,7 @@
 #include <mm/core_mmu.h>
 #include <riscv.h>
 #include <riscv_macros.S>
+#include <teesmc_opteed.h>
 
 .macro get_thread_ctx res, tmp0
 	lw	\tmp0, THREAD_CORE_LOCAL_CURR_THREAD(tp)
