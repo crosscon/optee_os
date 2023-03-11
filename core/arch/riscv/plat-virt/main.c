@@ -8,7 +8,7 @@
 #include <kernel/boot.h>
 #include <kernel/tee_common_otp.h>
 #include <platform_config.h>
-#include <plic.h>
+#include <drivers/plic.h>
 
 static struct plic_data plic_data __nex_bss;
 static struct ns16550_data console_data __nex_bss;

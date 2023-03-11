@@ -69,7 +69,7 @@ static inline void plic_enable_interrupt(struct plic_data *pd, uint32_t source)
 	uint32_t hartid = get_core_pos();
 
 	io_setbits32(PLIC_ENABLE(pd->plic_base, source, hartid),
-		     BIT(source & 0x1f);
+		     BIT(source & 0x1f));
 }
 
 static inline uint32_t plic_get_interrupt_enable(struct plic_data *pd,
@@ -88,7 +88,7 @@ static inline void plic_disable_interrupt(struct plic_data *pd, uint32_t source)
 	uint32_t hartid = get_core_pos();
 
 	io_clrbits32(PLIC_ENABLE(pd->plic_base, source, hartid),
-		     BIT((source & 0x1f));
+		     BIT(source & 0x1f));
 }
 
 static inline uint32_t plic_get_threshold(struct plic_data *pd)
