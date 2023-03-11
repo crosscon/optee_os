@@ -45,6 +45,32 @@
 #define REG_T3	28
 #define REG_T6	31
 
+#define _STR(s)  #s
+#define XSTR(s) _STR(s)
+
+#define read_csr(reg) ({ unsigned long __tmp; \
+  asm volatile ("csrr %0, " XSTR(reg) : "=r"(__tmp)); \
+  __tmp; })
+
+#define write_csr(reg, val) ({ \
+  asm volatile ("csrw " XSTR(reg) ", %0" :: "rK"(val)); })
+
+#define swap_csr(reg, val) ({ unsigned long __tmp; \
+  asm volatile ("csrrw %0, " XSTR(reg) ", %1" : "=r"(__tmp) : "rK"(val)); \
+  __tmp; })
+
+#define set_csr(reg, bit) ({ unsigned long __tmp; \
+  asm volatile ("csrrs %0, " XSTR(reg) ", %1" : "=r"(__tmp) : "rK"(bit)); \
+  __tmp; })
+
+#define clear_csr(reg, bit) ({ unsigned long __tmp; \
+  asm volatile ("csrrc %0, " XSTR(reg) ", %1" : "=r"(__tmp) : "rK"(bit)); \
+  __tmp; })
+
+#define rdtime() read_csr(time)
+#define rdcycle() read_csr(cycle)
+#define rdinstret() read_csr(instret)
+
 #if defined(CFG_RISCV_M_MODE)
 #define CSR_MODE_OFFSET	PRV_M
 #define XRET			mret
@@ -55,25 +81,44 @@
 
 #define CSR_MODE_BITS		SHIFT_U64(CSR_MODE_OFFSET, 8)
 
-#define CSR_XSTATUS		(CSR_MODE_BITS | 0x000)
-#define CSR_XIE			(CSR_MODE_BITS | 0x004)
-#define CSR_XTVEC		(CSR_MODE_BITS | 0x005)
-#define CSR_XSCRATCH		(CSR_MODE_BITS | 0x040)
-#define CSR_XEPC		(CSR_MODE_BITS | 0x041)
-#define CSR_XCAUSE		(CSR_MODE_BITS | 0x042)
-#define CSR_XTVAL		(CSR_MODE_BITS | 0x043)
-#define CSR_XIP			(CSR_MODE_BITS | 0x044)
+#if defined(CFG_RISCV_M_MODE)
+#define CSR_XSTATUS		CSR_MSTATUS	
+#define CSR_XIE			CSR_MIE		
+#define CSR_XTVEC		CSR_MTVEC	
+#define CSR_XSCRATCH	CSR_MSCRATCH
+#define CSR_XEPC		CSR_MEPC	
+#define CSR_XCAUSE		CSR_MCAUSE	
+#define CSR_XTVAL		CSR_MTVAL	
+#define CSR_XIP			CSR_MIP		
 
-#define IRQ_XSOFT		(CSR_MODE_OFFSET + 0)
-#define IRQ_XTIMER		(CSR_MODE_OFFSET + 4)
-#define IRQ_XEXT		(CSR_MODE_OFFSET + 8)
+#define IRQ_XSOFT		(3)
+#define IRQ_XTIMER		(7)
+#define IRQ_XEXT		(11)
+
+#define CSR_XSTATUS_IE		BIT(3)
+#define CSR_XSTATUS_PIE		BIT(7)
+#elif defined(CFG_RISCV_S_MODE)
+#define CSR_XSTATUS		CSR_SSTATUS	
+#define CSR_XIE			CSR_SIE		
+#define CSR_XTVEC		CSR_STVEC	
+#define CSR_XSCRATCH	CSR_SSCRATCH
+#define CSR_XEPC		CSR_SEPC	
+#define CSR_XCAUSE		CSR_SCAUSE	
+#define CSR_XTVAL		CSR_STVAL	
+#define CSR_XIP			CSR_SIP		
+
+#define IRQ_XSOFT		(1)
+#define IRQ_XTIMER		(5)     
+#define IRQ_XEXT		(9)
+
+#define CSR_XSTATUS_IE		BIT(1)
+#define CSR_XSTATUS_PIE		BIT(5)
+#endif
+
 
 #define CSR_XIE_SIE		BIT64(IRQ_XSOFT)
 #define CSR_XIE_TIE		BIT64(IRQ_XTIMER)
 #define CSR_XIE_EIE		BIT64(IRQ_XEXT)
-
-#define CSR_XSTATUS_IE		BIT(CSR_MODE_OFFSET + 0)
-#define CSR_XSTATUS_PIE		BIT(CSR_MODE_OFFSET + 4)
 #define CSR_XSTATUS_SPP		BIT(8)
 #define CSR_XSTATUS_SUM		BIT(18)
 #define CSR_XSTATUS_MXR		BIT(19)
