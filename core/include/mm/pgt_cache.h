@@ -5,7 +5,7 @@
 #ifndef MM_PGT_CACHE_H
 #define MM_PGT_CACHE_H
 
-#ifdef CFG_WITH_LPAE
+#if defined(CFG_WITH_LPAE) || defined(RV64)
 #define PGT_SIZE	(4 * 1024)
 #define PGT_NUM_PGT_PER_PAGE	1
 #else
