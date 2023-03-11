@@ -36,6 +36,7 @@
 	 * t2 is value of stack_tmp
 	 */
 	mv	sp, t2
+        add t0, t0, 1
 	mul	t2, t1, t0
 	add	sp, sp, t2
 .endm
