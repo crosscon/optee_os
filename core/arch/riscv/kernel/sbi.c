@@ -5,6 +5,8 @@
 
 #include <riscv.h>
 #include <sbi.h>
+#include <trace.h>
+#include <teesmc_opteed.h>
 
 struct sbiret {
 	long error;
@@ -21,8 +23,8 @@ struct sbiret {
 	register unsigned long a6 asm("a6") = (unsigned long)fid;  \
 	register unsigned long a7 asm("a7") = (unsigned long)ext;  \
 	asm volatile ("ecall" \
-		: "+r" (a0), "+r" (a1) \
-		: "r" (a2), "r" (a3), "r" (a4), "r" (a5), "r"(a6), "r"(a7) \
+		: "+r" (a0), "+r" (a1), "+r" (a2) \
+		: "r" (a3), "r" (a4), "r" (a5), "r"(a6), "r"(a7) \
 		: "memory"); \
 	(struct sbiret){ .error = a0, .value = a1 }; \
 })
@@ -41,4 +43,21 @@ int sbi_boot_hart(uint32_t hart_id, paddr_t start_addr, unsigned long arg)
 	ret = sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START, hart_id, start_addr, arg);
 
 	return ret.error;
+}
+
+#define SBI_EXTID_BAO (0x08000ba0)
+#define SBI_BAO_TEE_HC (4)
+
+void thread_handle_std_smc();
+
+void bao_return_to_ree(unsigned long arg, unsigned long return_value) {
+    sbi_ecall(SBI_EXTID_BAO, SBI_BAO_TEE_HC, arg, return_value);
+    thread_handle_std_smc();
+    EMSG("returned from thread_handle_std_smc");
+    while(1);
+}
+
+void mu_service() {
+    bao_return_to_ree(TEESMC_OPTEED_FUNCID_RETURN_ENTRY_DONE, 0);
+    while(1);
 }

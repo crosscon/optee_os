@@ -255,8 +255,8 @@ END_FUNC __thread_enter_user_mode
  * messages.
  */
 LOCAL_FUNC thread_return_from_nsec_call , :
-	/* Implement */
-	j	.
+    jal bao_return_to_ree
+    j .
 END_FUNC thread_return_from_nsec_call
 
 
