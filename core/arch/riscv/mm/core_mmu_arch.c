@@ -404,7 +404,7 @@ bool arch_va2pa_helper(void *va, paddr_t *pa)
 
 	pgt = core_mmu_get_root_pgt_va(prtn);
 
-	for (level = CORE_MMU_BASE_TABLE_LEVEL; level >= 0; level--) {
+	for (level = 0; level <= CORE_MMU_USER_TABLE_LEVEL; level++) {
 		idx = core_mmu_pgt_idx(vaddr, level);
 		pte = core_mmu_table_get_entry(pgt, idx);
 
@@ -444,7 +444,7 @@ bool core_mmu_find_table(struct mmu_partition *prtn, vaddr_t va,
 
 	pgt = core_mmu_get_root_pgt_va(prtn);
 
-	for (level = CORE_MMU_BASE_TABLE_LEVEL; level > 0; level--) {
+	for (level = 0; level <= CORE_MMU_USER_TABLE_LEVEL; level++) {
 		idx = core_mmu_pgt_idx(va, level);
 		pte = core_mmu_table_get_entry(pgt, idx);
 
@@ -587,10 +587,10 @@ void core_mmu_get_user_va_range(vaddr_t *base, size_t *size)
 
 	if (base)
 		*base =  (vaddr_t)SHIFT_U64(user_va_idx,
-					    CORE_MMU_USER_TABLE_SHIFT);
+					    CORE_MMU_BASE_TABLE_SHIFT);
 
 	if (size)
-		*size =  BIT64(CORE_MMU_USER_TABLE_SHIFT);
+		*size =  BIT64(CORE_MMU_BASE_TABLE_SHIFT);
 }
 
 void core_mmu_get_user_pgdir(struct core_mmu_table_info *pgd_info)
@@ -605,7 +605,7 @@ void core_mmu_get_user_pgdir(struct core_mmu_table_info *pgd_info)
 	 * core_mmu_set_info_table(&pg_info, dir_info->level + 1, 0, NULL);
 	 Therefore, set tbl_info.level to -1.
 	 */
-	core_mmu_set_info_table(pgd_info, CORE_MMU_PGDIR_LEVEL - 1,
+	core_mmu_set_info_table(pgd_info, CORE_MMU_PGDIR_LEVEL + 1,
 				va_range_base, pgt);
 }
 
