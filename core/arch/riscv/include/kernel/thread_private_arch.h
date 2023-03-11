@@ -81,5 +81,17 @@ void thread_exit_user_mode(unsigned long a0, unsigned long a1,
 			   unsigned long sp, unsigned long pc,
 			   unsigned long status);
 
+/*
+ * Assembly function as the first function in a thread.  Handles a stdcall,
+ * a0-a3 holds the parameters. Hands over to __thread_std_smc_entry() when
+ * everything is set up and does some post processing once
+ * __thread_std_smc_entry() returns.
+ */
+void thread_std_smc_entry(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3,
+			  uint32_t a4, uint32_t a5);
+uint32_t __thread_std_smc_entry(uint32_t a0, uint32_t a1, uint32_t a2,
+				uint32_t a3, uint32_t a4, uint32_t a5);
+
+
 #endif /*__ASSEMBLER__*/
 #endif /*__KERNEL_THREAD_PRIVATE_ARCH_H*/
