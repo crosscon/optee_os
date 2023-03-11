@@ -12,5 +12,4 @@ srcs-y += thread_arch.c
 srcs-y += arch_scall_rv.S
 srcs-y += arch_scall.c
 asm-defines-y += asm-defines.c
-srcs-y += ldelf_loader.c
 srcs-y += thread_optee_sbi.c
