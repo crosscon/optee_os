@@ -34,3 +34,7 @@ $(call force,CFG_CORE_RESERVED_SHM,y)
 CFG_SHMEM_START  ?= 0x88f00000
 CFG_SHMEM_SIZE   ?= 0x00200000
 CFG_TEE_RAM_VA_SIZE ?= 0x00200000
+
+$(call force,CFG_RISCV_M_MODE,n)
+$(call force,CFG_RISCV_S_MODE,y)
+$(call force,CFG_RISCV_SBI,y)
