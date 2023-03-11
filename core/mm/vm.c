@@ -118,7 +118,6 @@ static TEE_Result alloc_pgt(struct user_mode_ctx *uctx)
 		return TEE_ERROR_OUT_OF_MEMORY;
 	}
 
-#ifdef CFG_PAGED_USER_TA
 	tsd = thread_get_tsd();
 	if (uctx->ts_ctx == tsd->ctx) {
 		/*
@@ -127,7 +126,6 @@ static TEE_Result alloc_pgt(struct user_mode_ctx *uctx)
 		 */
 		pgt_get_all(uctx);
 	}
-#endif
 
 	return TEE_SUCCESS;
 }
