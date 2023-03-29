@@ -435,6 +435,8 @@ bool core_mmu_find_table(struct mmu_partition *prtn, vaddr_t va,
 	struct mmu_pte *pte = NULL;
 	unsigned int level = 0;
 	unsigned int idx = 0;
+	vaddr_t va_base = 0;
+
 
 	if (max_level >= RISCV_PGLEVELS)
 		return false;
@@ -444,9 +446,12 @@ bool core_mmu_find_table(struct mmu_partition *prtn, vaddr_t va,
 
 	pgt = core_mmu_get_root_pgt_va(prtn);
 
-	for (level = 0; level <= CORE_MMU_USER_TABLE_LEVEL; level++) {
+	for (level = 0; level <= max_level; level++) {
+		unsigned int level_size_shift = CORE_MMU_SHIFT_OF_LEVEL(level);
+		unsigned int n = (va - va_base) >> level_size_shift;
 		idx = core_mmu_pgt_idx(va, level);
 		pte = core_mmu_table_get_entry(pgt, idx);
+
 
 		if (core_mmu_entry_is_invalid(pte) ||
 		    core_mmu_entry_is_leaf(pte))
@@ -454,9 +459,10 @@ bool core_mmu_find_table(struct mmu_partition *prtn, vaddr_t va,
 
 		pgt = phys_to_virt(pte_to_pa(pte),
 				   MEM_AREA_TEE_RAM_RW_DATA, sizeof(*pgt));
+		va_base += (vaddr_t)n << level_size_shift;
 	}
 
-	core_mmu_set_info_table(tbl_info, level, 0, pgt);
+	core_mmu_set_info_table(tbl_info, level, va_base, pgt);
 
 	return true;
 }
