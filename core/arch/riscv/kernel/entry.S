@@ -65,6 +65,7 @@
 .macro set_satp
 	la	a1, boot_mmu_config
 	LDR	a0, CORE_MMU_CONFIG_SATP(a1)
+	sfence.vma	zero, zero
 	csrw	CSR_SATP, a0
 	sfence.vma	zero, zero
 .endm
