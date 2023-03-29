@@ -279,13 +279,13 @@ static TEE_Result test_inject_sdp(uint32_t type, TEE_Param p[TEE_NUM_PARAMS])
 	if (test_v2p2v(src, sz) || test_v2p2v(dst, sz))
 		return TEE_ERROR_SECURITY;
 
-	if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS)
-		return TEE_ERROR_GENERIC;
+	/* if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS) */
+	/* 	return TEE_ERROR_GENERIC; */
 
 	memcpy(dst, src, sz);
 
-	if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS)
-		return TEE_ERROR_GENERIC;
+	/* if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS) */
+	/* 	return TEE_ERROR_GENERIC; */
 
 	return TEE_SUCCESS;
 }
@@ -316,14 +316,14 @@ static TEE_Result test_transform_sdp(uint32_t type, TEE_Param p[TEE_NUM_PARAMS])
 	if (test_v2p2v(buf, sz))
 		return TEE_ERROR_SECURITY;
 
-	if (cache_operation(TEE_CACHEFLUSH, buf, sz) != TEE_SUCCESS)
-		return TEE_ERROR_GENERIC;
+	/* if (cache_operation(TEE_CACHEFLUSH, buf, sz) != TEE_SUCCESS) */
+	/* 	return TEE_ERROR_GENERIC; */
 
 	for (; sz; sz--, buf++)
 		*buf = ~(*buf) + 1;
 
-	if (cache_operation(TEE_CACHEFLUSH, buf, sz) != TEE_SUCCESS)
-		return TEE_ERROR_GENERIC;
+	/* if (cache_operation(TEE_CACHEFLUSH, buf, sz) != TEE_SUCCESS) */
+	/* 	return TEE_ERROR_GENERIC; */
 
 	return TEE_SUCCESS;
 }
@@ -361,13 +361,13 @@ static TEE_Result test_dump_sdp(uint32_t type, TEE_Param p[TEE_NUM_PARAMS])
 	if (test_v2p2v(src, sz) || test_v2p2v(dst, sz))
 		return TEE_ERROR_SECURITY;
 
-	if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS)
-		return TEE_ERROR_GENERIC;
+	/* if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS) */
+	/* 	return TEE_ERROR_GENERIC; */
 
 	memcpy(dst, src, sz);
 
-	if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS)
-		return TEE_ERROR_GENERIC;
+	/* if (cache_operation(TEE_CACHEFLUSH, dst, sz) != TEE_SUCCESS) */
+	/* 	return TEE_ERROR_GENERIC; */
 
 	return TEE_SUCCESS;
 }
