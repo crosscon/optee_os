@@ -615,7 +615,7 @@ void core_mmu_get_user_pgdir(struct core_mmu_table_info *pgd_info)
 	 * core_mmu_set_info_table(&pg_info, dir_info->level + 1, 0, NULL);
 	 Therefore, set tbl_info.level to -1.
 	 */
-	core_mmu_set_info_table(pgd_info, CORE_MMU_PGDIR_LEVEL + 1,
+	core_mmu_set_info_table(pgd_info, CORE_MMU_PGDIR_LEVEL,
 				va_range_base, pgt);
 }
 
