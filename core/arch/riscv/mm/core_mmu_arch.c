@@ -580,6 +580,7 @@ void core_mmu_set_user_map(struct core_mmu_user_map *map)
 		ptp = core_mmu_ptp_create(pa_to_ppn((paddr_t)map->user_map));
 		core_mmu_entry_set(pte, ptp);
 		core_mmu_table_write_barrier();
+		satp &= ~SHIFT_U64(RISCV_SATP_ASID_MASK, RISCV_SATP_ASID_SHIFT);
 		satp |= SHIFT_U64(map->asid, RISCV_SATP_ASID_SHIFT);
 		tlbi_all();
 		write_satp(satp);
