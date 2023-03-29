@@ -28,7 +28,7 @@ CFG_RISCV_MTIME_RATE ?= 10000000
 supported-ta-targets = ta_rv64
 
 # Memory layout flags
-CFG_TDDRAM_START ?= 0x8e000000
+CFG_TDDRAM_START ?= 0x80200000
 CFG_TDDRAM_SIZE  ?= 0x00f00000
 $(call force,CFG_CORE_RESERVED_SHM,y)
 CFG_SHMEM_START  ?= 0x88f00000
@@ -38,3 +38,22 @@ CFG_TEE_RAM_VA_SIZE ?= 0x00200000
 $(call force,CFG_RISCV_M_MODE,n)
 $(call force,CFG_RISCV_S_MODE,y)
 $(call force,CFG_RISCV_SBI,y)
+$(call force,CFG_TEE_CORE_EMBED_INTERNAL_TESTS,y)
+$(call force,CFG_WITH_LPAE,y)
+
+$(call force,CFG_ATTESTATION_PTA,y)
+$(call force,CFG_DEVICE_ENUM_PTA,y)
+$(call force,CFG_SECSTOR_TA_MGMT_PTA,y)
+$(call force,CFG_SYSTEM_PTA,y)
+$(call force,CFG_RTC_PTA,y)
+
+$(call force,CFG_APDU_PTA,n)
+$(call force,CFG_SCP03_PTA,n)
+$(call force,CFG_SCMI_PTA,n)
+$(call force,CFG_HWRNG_PTA,n)
+
+$(call force,CFG_TA_ASLR,n)
+$(call force,CFG_TA_FLOAT_SUPPORT,n)
+
+
+
