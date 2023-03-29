@@ -115,6 +115,10 @@ static bool __maybe_unused core_mmu_entry_is_branch(struct mmu_pte *pte)
 
 static unsigned long core_mmu_pte_create(unsigned long ppn, uint8_t perm)
 {
+	if( (PTE_R | PTE_W | PTE_X) & perm){
+	    perm |= PTE_D | PTE_A;
+	}
+
 	return SHIFT_U64(ppn, PTE_PPN_SHIFT) | PTE_V | perm;
 }
 
