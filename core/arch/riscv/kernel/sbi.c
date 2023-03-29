@@ -50,14 +50,53 @@ int sbi_boot_hart(uint32_t hart_id, paddr_t start_addr, unsigned long arg)
 
 void thread_handle_std_smc();
 
-void bao_return_to_ree(unsigned long arg, unsigned long return_value) {
-    sbi_ecall(SBI_EXTID_BAO, SBI_BAO_TEE_HC, arg, return_value);
+struct tz_res{
+    unsigned long a0;
+    unsigned long a1;
+    unsigned long a2;
+    unsigned long a3;
+    unsigned long a4;
+    unsigned long a5;
+};
+
+static void sbi_tz_ecall(unsigned long ext, unsigned long fid, 
+			unsigned long arg0, unsigned long arg1, 
+			unsigned long arg2, unsigned long arg3, 
+			unsigned long arg4, unsigned long arg5,
+			struct tz_res *res) {
+	register unsigned long a0 asm("a0") = (unsigned long)arg0;
+	register unsigned long a1 asm("a1") = (unsigned long)arg1;
+	register unsigned long a2 asm("a2") = (unsigned long)arg2;
+	register unsigned long a3 asm("a3") = (unsigned long)arg3;
+	register unsigned long a4 asm("a4") = (unsigned long)arg4;
+	register unsigned long a5 asm("a5") = (unsigned long)arg5;
+	register unsigned long a6 asm("a6") = (unsigned long)fid;
+	register unsigned long a7 asm("a7") = (unsigned long)ext;
+	asm volatile ("ecall"
+		: "+r" (a0), "+r" (a1), "+r" (a2), "+r" (a3), "+r" (a4), "+r" (a5)
+		: "r"(a6), "r"(a7)
+		: "memory");
+	/* res->a0 = a0; */
+	/* res->a1 = a1; */
+	/* res->a2 = a2; */
+	/* res->a3 = a3; */
+	/* res->a4 = a4; */
+	/* res->a5 = a5; */
+}
+
+void bao_return_to_ree(unsigned long arg0, unsigned long arg1,
+			unsigned long arg2, unsigned long arg3,
+			unsigned long arg4, unsigned long arg5,
+			unsigned long arg6, unsigned long arg7) {
+    struct tz_res res;
+    sbi_tz_ecall(SBI_EXTID_BAO, SBI_BAO_TEE_HC,
+		arg0, arg1, arg2, arg3, arg4, arg5, &res);
     thread_handle_std_smc();
     EMSG("returned from thread_handle_std_smc");
     while(1);
 }
 
 void mu_service() {
-    bao_return_to_ree(TEESMC_OPTEED_FUNCID_RETURN_ENTRY_DONE, 0);
+    bao_return_to_ree(TEESMC_OPTEED_FUNCID_RETURN_ENTRY_DONE, 0, 0, 0, 0, 0, 0, 0);
     while(1);
 }
