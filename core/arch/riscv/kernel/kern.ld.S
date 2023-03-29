@@ -166,7 +166,7 @@ SECTIONS
 	.bss : {
 		__data_end = .;
 		__bss_start = .;
-		*(.bss .bss.*)
+		*(.bss .bss.* .sbss.*)
 		*(.gnu.linkonce.b.*)
 		*(COMMON)
 		. = ALIGN(8);
