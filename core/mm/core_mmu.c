@@ -1905,7 +1905,7 @@ void core_mmu_populate_user_map(struct core_mmu_table_info *dir_info,
 	pgt_get_all(uctx);
 	pgt = SLIST_FIRST(pgt_cache);
 
-	core_mmu_set_info_table(&pg_info, dir_info->level - 1, 0, NULL);
+	core_mmu_set_info_table(&pg_info, dir_info->level + 1, 0, NULL);
 
 	TAILQ_FOREACH(r, &uctx->vm_info.regions, link)
 		set_pg_region(dir_info, r, &pgt, &pg_info);
