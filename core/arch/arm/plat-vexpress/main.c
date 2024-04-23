@@ -54,16 +54,33 @@ register_ddr(DRAM1_BASE, DRAM1_SIZE);
 register_phys_mem_pgdir(MEM_AREA_IO_SEC, GICD_BASE, GIC_DIST_REG_SIZE);
 register_phys_mem_pgdir(MEM_AREA_IO_SEC, GICC_BASE, GIC_DIST_REG_SIZE);
 
+enum itr_return nothing(struct itr_handler *h);
+
+static struct itr_handler nothing_itr = {
+	.it = 40,
+	.flags = ITRF_TRIGGER_LEVEL,
+	.handler = nothing,
+};
+
+enum itr_return nothing(struct itr_handler *h)
+{
+    return ITRR_HANDLED;
+}
+DECLARE_KEEP_PAGER(nothing_itr);
 void main_init_gic(void)
 {
-#if defined(CFG_WITH_ARM_TRUSTED_FW)
-	/* On ARMv8, GIC configuration is initialized in ARM-TF */
-	gic_init_base_addr(&gic_data, GIC_BASE + GICC_OFFSET,
-			   GIC_BASE + GICD_OFFSET);
-#else
+/* #if defined(CFG_WITH_ARM_TRUSTED_FW) */
+/* 	/1* On ARMv8, GIC configuration is initialized in ARM-TF *1/ */
+/* 	gic_init_base_addr(&gic_data, GIC_BASE + GICC_OFFSET, */
+/* 			   GIC_BASE + GICD_OFFSET); */
+/* #else */
+/* 	gic_init(&gic_data, GIC_BASE + GICC_OFFSET, GIC_BASE + GICD_OFFSET); */
+/* #endif */
 	gic_init(&gic_data, GIC_BASE + GICC_OFFSET, GIC_BASE + GICD_OFFSET);
-#endif
 	itr_init(&gic_data.chip);
+
+	itr_add(&nothing_itr);
+	itr_enable(40);
 }
 
 #if !defined(CFG_WITH_ARM_TRUSTED_FW)
@@ -179,10 +196,10 @@ struct notif_driver console_notif = {
 
 static TEE_Result init_console_itr(void)
 {
-	itr_add(&console_itr);
-	itr_enable(IT_CONSOLE_UART);
-	if (IS_ENABLED(CFG_CORE_ASYNC_NOTIF))
-		notif_register_driver(&console_notif);
+	/* itr_add(&console_itr); */
+	/* itr_enable(IT_CONSOLE_UART); */
+	/* if (IS_ENABLED(CFG_CORE_ASYNC_NOTIF)) */
+	/* 	notif_register_driver(&console_notif); */
 	return TEE_SUCCESS;
 }
 driver_init(init_console_itr);

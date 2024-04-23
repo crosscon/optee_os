@@ -55,12 +55,13 @@ endif
 CFG_WITH_STATS ?= y
 CFG_ENABLE_EMBEDDED_TESTS ?= y
 
-ifeq ($(CFG_CORE_SEL2_SPMC),y)
-$(call force,CFG_CORE_RESERVED_SHM,n)
-CFG_GIC ?= n
-else
 $(call force,CFG_GIC,y)
-endif
+# ifeq ($(CFG_CORE_SEL2_SPMC),y)
+# $(call force,CFG_CORE_RESERVED_SHM,n)
+# CFG_GIC ?= n
+# else
+# $(call force,CFG_GIC,y)
+# endif
 
 ifeq ($(PLATFORM_FLAVOR),fvp)
 CFG_TEE_CORE_NB_CORE = 8
@@ -116,7 +117,7 @@ CFG_ASAN_SHADOW_OFFSET = 0xc6a71c0
 endif
 $(call force,CFG_BOOT_SECONDARY_REQUEST,y)
 $(call force,CFG_PSCI_ARM32,y)
-$(call force,CFG_DT,y)
+# $(call force,CFG_DT,y)
 CFG_DTB_MAX_SIZE ?= 0x100000
 CFG_CORE_ASYNC_NOTIF ?= y
 CFG_CORE_ASYNC_NOTIF_GIC_INTID ?= 219
@@ -135,7 +136,7 @@ CFG_SHMEM_SIZE  ?= 0x00200000
 # When Secure Data Path is enable, last MByte of TZDRAM is SDP test memory.
 CFG_TEE_SDP_MEM_SIZE ?= 0x00400000
 endif
-$(call force,CFG_DT,y)
+# $(call force,CFG_DT,y)
 CFG_DTB_MAX_SIZE ?= 0x100000
 ifeq ($(CFG_SCMI_SCPFW),y)
 $(call force,CFG_SCMI_SCPFW_PRODUCT,optee-fvp)
@@ -143,7 +144,7 @@ endif
 endif
 
 ifneq (,$(filter $(PLATFORM_FLAVOR),qemu_virt qemu_armv8a))
-CFG_DT_DRIVER_EMBEDDED_TEST ?= y
+# CFG_DT_DRIVER_EMBEDDED_TEST ?= y
 ifeq ($(CFG_DT_DRIVER_EMBEDDED_TEST),y)
 $(call force,CFG_EMBED_DTB_SOURCE_FILE,embedded_dtb_test.dts,Mandated for DT tests)
 endif
