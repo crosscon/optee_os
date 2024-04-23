@@ -1670,7 +1670,7 @@ void core_mmu_map_region(struct mmu_partition *prtn, struct tee_mmap_region *mm)
 		while (true) {
 			paddr_t block_size = 0;
 
-			assert(level >= CORE_MMU_PGDIR_LEVEL);
+			/* assert(level >= CORE_MMU_PGDIR_LEVEL); */
 
 			table_found = core_mmu_find_table(prtn, vaddr, level,
 							  &tbl_info);

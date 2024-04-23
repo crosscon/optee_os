@@ -45,8 +45,8 @@ int sbi_boot_hart(uint32_t hart_id, paddr_t start_addr, unsigned long arg)
 	return ret.error;
 }
 
-#define SBI_EXTID_BAO (0x08000ba0)
-#define SBI_BAO_TEE_HC (4)
+#define SBI_EXTID_crossconhyp (0x08000ba0)
+#define SBI_crossconhyp_TEE_HC (4)
 
 void thread_handle_std_smc();
 
@@ -59,9 +59,9 @@ struct tz_res{
     unsigned long a5;
 };
 
-static void sbi_tz_ecall(unsigned long ext, unsigned long fid, 
-			unsigned long arg0, unsigned long arg1, 
-			unsigned long arg2, unsigned long arg3, 
+static void sbi_tz_ecall(unsigned long ext, unsigned long fid,
+			unsigned long arg0, unsigned long arg1,
+			unsigned long arg2, unsigned long arg3,
 			unsigned long arg4, unsigned long arg5,
 			struct tz_res *res) {
 	register unsigned long a0 asm("a0") = (unsigned long)arg0;
@@ -84,12 +84,12 @@ static void sbi_tz_ecall(unsigned long ext, unsigned long fid,
 	/* res->a5 = a5; */
 }
 
-void bao_return_to_ree(unsigned long arg0, unsigned long arg1,
+void crossconhyp_return_to_ree(unsigned long arg0, unsigned long arg1,
 			unsigned long arg2, unsigned long arg3,
 			unsigned long arg4, unsigned long arg5,
 			unsigned long arg6, unsigned long arg7) {
     struct tz_res res;
-    sbi_tz_ecall(SBI_EXTID_BAO, SBI_BAO_TEE_HC,
+    sbi_tz_ecall(SBI_EXTID_crossconhyp, SBI_crossconhyp_TEE_HC,
 		arg0, arg1, arg2, arg3, arg4, arg5, &res);
     thread_handle_std_smc();
     EMSG("returned from thread_handle_std_smc");
@@ -97,6 +97,6 @@ void bao_return_to_ree(unsigned long arg0, unsigned long arg1,
 }
 
 void mu_service() {
-    bao_return_to_ree(TEESMC_OPTEED_FUNCID_RETURN_ENTRY_DONE, 0, 0, 0, 0, 0, 0, 0);
+    crossconhyp_return_to_ree(TEESMC_OPTEED_FUNCID_RETURN_ENTRY_DONE, 0, 0, 0, 0, 0, 0, 0);
     while(1);
 }

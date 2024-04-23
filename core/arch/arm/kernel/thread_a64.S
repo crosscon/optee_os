@@ -1313,23 +1313,27 @@ END_FUNC el0_sync_abort
 	load_xregs sp, THREAD_CORE_LOCAL_X0, 0, 1
 
 	/* Return from exception */
-	return_from_exception
-1:	b	eret_to_el0
+// 	return_from_exception
+ 1:	//b	eret_to_el0
 .endm
 
 LOCAL_FUNC elx_irq , :
 #if defined(CFG_CORE_IRQ_IS_NATIVE_INTR)
 	native_intr_handler	irq
+	foreign_intr_handler	irq
 #else
+	native_intr_handler	irq
 	foreign_intr_handler	irq
 #endif
 END_FUNC elx_irq
 
 LOCAL_FUNC elx_fiq , :
 #if defined(CFG_CORE_IRQ_IS_NATIVE_INTR)
+	native_intr_handler	irq
 	foreign_intr_handler	fiq
 #else
 	native_intr_handler	fiq
+	foreign_intr_handler	fiq
 #endif
 END_FUNC elx_fiq
 

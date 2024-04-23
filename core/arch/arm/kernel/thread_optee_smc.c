@@ -23,6 +23,7 @@
 #include <tee/entry_std.h>
 #include <tee/tee_cryp_utl.h>
 #include <tee/tee_fs_rpc.h>
+#include <tee/crossconhyp_return_to_ree.h>
 
 static bool thread_prealloc_rpc_cache;
 static unsigned int thread_rpc_pnum;
@@ -78,6 +79,84 @@ uint32_t thread_handle_std_smc(uint32_t a0, uint32_t a1, uint32_t a2,
 		virt_unset_guest();
 
 	return rv;
+}
+
+#include <sm/optee_smc.h>
+#include <sm/teesmc_opteed.h>
+#include <sm/teesmc_opteed_macros.h>
+/*
+ * Perform a SMC call to the normal world
+*/
+static void smc_call(unsigned long a0, unsigned long a1, unsigned long a2,
+                    unsigned long a3, unsigned long a4, unsigned long a5,
+		    unsigned long a6, unsigned long a7, struct thread_smc_args *res)
+{
+    register unsigned long r0 asm("x0") = a0;
+    register unsigned long r1 asm("x1") = a1;
+    register unsigned long r2 asm("x2") = a2;
+    register unsigned long r3 asm("x3") = a3;
+    register unsigned long r4 asm("x4") = a4;
+    register unsigned long r5 asm("x5") = a5;
+    register unsigned long r6 asm("x6") = a6;
+    register unsigned long r7 asm("x7") = a7;
+
+    asm volatile("smc	#0\n" :
+	    "=r"(r0), "=r"(r1), "=r"(r2), "=r"(r3), "=r"(r4), "=r"(r5), "=r"(r6), "=r"(r7)
+	    : "r"(r0), "r"(r1), "r"(r2), "r"(r3), "r"(r4), "r"(r5), "r"(r6), "r"(r7));
+
+    if (res != NULL)
+    {
+	res->a0 = r0;
+	res->a1 = r1;
+	res->a2 = r2;
+	res->a3 = r3;
+	res->a4 = r4;
+	res->a5 = r5;
+	res->a6 = r6;
+	res->a7 = r7;
+    }
+}
+
+#include <sm/teesmc_opteed.h>
+/*
+* @brief Handles the return of the cold boot, standard call or RPC call
+* @details Called from assembly only.
+*/
+void __attribute__((__noreturn__))
+crossconhyp_return_to_ree(unsigned long a0, unsigned long a1, unsigned long a2,
+			unsigned long a3, unsigned long a4, unsigned long a5,
+			unsigned long a6, unsigned long a7)
+{
+	struct thread_smc_args res;
+        unsigned long ret;
+
+	while (1){
+	    // Call the SMC handler in REE
+	    /* EMSG("0x%lx, 0x%lx, 0x%lx, 0x%lx, 0x%lx, 0x%lx, 0x%lx, 0x%lx", */
+		    /* a0, a1, a2, a3, a4, a5, a6, a7); */
+	    smc_call(a0, a1, a2, a3, a4, a5, a6, a7, &res);
+
+	    if(res.a0 & OPTEE_SMC_FAST_CALL){
+		thread_handle_fast_smc(&res);
+		a0 = TEESMC_OPTEED_RETURN_CALL_DONE;
+		a1 = res.a0;
+		a2 = res.a1;
+		a3 = res.a2;
+		a4 = res.a3;
+		a5 = res.a4;
+		a6 = res.a5;
+		a7 = res.a6;
+	    }else{
+		// Handle the return from the SMC call
+                ret = thread_handle_std_smc(res.a0, res.a1, res.a2, res.a3,
+				      res.a4, res.a5, res.a6, res.a7);
+                a0 = ret;
+                if(a0 != 0){
+                    for (volatile int x = 1; x==0;);
+                }
+
+	    }
+	}
 }
 
 /**

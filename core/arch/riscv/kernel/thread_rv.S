@@ -255,7 +255,7 @@ END_FUNC __thread_enter_user_mode
  * messages.
  */
 LOCAL_FUNC thread_return_from_nsec_call , :
-    jal bao_return_to_ree
+    jal crossconhyp_return_to_ree
     j .
 END_FUNC thread_return_from_nsec_call
 

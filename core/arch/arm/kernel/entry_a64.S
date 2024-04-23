@@ -405,7 +405,8 @@ clear_nex_bss:
 	adr	x1, thread_vector_table
 	sub	x1, x1, x0
 	mov	x0, #TEESMC_OPTEED_RETURN_ENTRY_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 #endif

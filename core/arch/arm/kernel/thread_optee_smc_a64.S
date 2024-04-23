@@ -47,7 +47,8 @@ LOCAL_FUNC vector_std_smc_entry , : , .identity_map
 	 */
 	mov	w1, w0
 	ldr	x0, =TEESMC_OPTEED_RETURN_CALL_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_std_smc_entry
@@ -61,7 +62,8 @@ LOCAL_FUNC vector_fast_smc_entry , : , .identity_map
 	load_xregs sp, THREAD_SMC_ARGS_X0, 1, 8
 	add	sp, sp, #THREAD_SMC_ARGS_SIZE
 	ldr	x0, =TEESMC_OPTEED_RETURN_CALL_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_fast_smc_entry
@@ -72,7 +74,8 @@ LOCAL_FUNC vector_fiq_entry , : , .identity_map
 	bl	thread_check_canaries
 	bl	itr_core_handler
 	ldr	x0, =TEESMC_OPTEED_RETURN_FIQ_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_fiq_entry
@@ -81,7 +84,8 @@ LOCAL_FUNC vector_cpu_on_entry , : , .identity_map
 	bl	cpu_on_handler
 	mov	x1, x0
 	ldr	x0, =TEESMC_OPTEED_RETURN_ON_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_cpu_on_entry
@@ -91,7 +95,8 @@ LOCAL_FUNC vector_cpu_off_entry , : , .identity_map
 	bl	thread_cpu_off_handler
 	mov	x1, x0
 	ldr	x0, =TEESMC_OPTEED_RETURN_OFF_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_cpu_off_entry
@@ -101,7 +106,8 @@ LOCAL_FUNC vector_cpu_suspend_entry , : , .identity_map
 	bl	thread_cpu_suspend_handler
 	mov	x1, x0
 	ldr	x0, =TEESMC_OPTEED_RETURN_SUSPEND_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_cpu_suspend_entry
@@ -111,7 +117,8 @@ LOCAL_FUNC vector_cpu_resume_entry , : , .identity_map
 	bl	thread_cpu_resume_handler
 	mov	x1, x0
 	ldr	x0, =TEESMC_OPTEED_RETURN_RESUME_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_cpu_resume_entry
@@ -121,7 +128,8 @@ LOCAL_FUNC vector_system_off_entry , : , .identity_map
 	bl	thread_system_off_handler
 	mov	x1, x0
 	ldr	x0, =TEESMC_OPTEED_RETURN_SYSTEM_OFF_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_system_off_entry
@@ -131,7 +139,8 @@ LOCAL_FUNC vector_system_reset_entry , : , .identity_map
 	bl	thread_system_reset_handler
 	mov	x1, x0
 	ldr	x0, =TEESMC_OPTEED_RETURN_SYSTEM_RESET_DONE
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC vector_system_reset_entry
@@ -172,7 +181,8 @@ FUNC thread_std_smc_entry , :
 	mov	x2, #0
 	mov	x3, #0
 	mov	x4, #0
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC thread_std_smc_entry
@@ -220,7 +230,8 @@ FUNC thread_rpc , :
 	mov	x1, x21
 	mov	x2, x22
 	mov	x3, x23
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 
@@ -253,7 +264,8 @@ FUNC thread_foreign_intr_exit , :
 	ldr	w1, =OPTEE_SMC_RETURN_RPC_FOREIGN_INTR
 	mov	w2, #0
 	mov	w3, #0
-	smc	#0
+	/* smc	#0 */
+	bl crossconhyp_return_to_ree
 	/* SMC should not return */
 	panic_at_smc_return
 END_FUNC thread_foreign_intr_exit
