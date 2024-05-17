@@ -51,6 +51,7 @@
 	PLIC_COMPLETE(base, hart)
 
 register_phys_mem_pgdir(MEM_AREA_IO_SEC, PLIC_BASE, PLIC_REG_SIZE);
+register_phys_mem_pgdir(MEM_AREA_IO_SEC, PLIC_BASE+PLIC_CLAIM_OFFSET, PLIC_REG_SIZE);
 
 static bool plic_is_pending(struct plic_data *pd, uint32_t source)
 {

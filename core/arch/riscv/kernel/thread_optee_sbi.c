@@ -23,32 +23,33 @@
 #include <tee/entry_std.h>
 #include <tee/tee_cryp_utl.h>
 #include <tee/tee_fs_rpc.h>
+#include <tee/entry_fast.h>
 
 static bool thread_prealloc_rpc_cache;
 static unsigned int thread_rpc_pnum;
 
-// static_assert(NOTIF_VALUE_DO_BOTTOM_HALF ==
-// 	      OPTEE_SMC_ASYNC_NOTIF_VALUE_DO_BOTTOM_HALF);
+static_assert(NOTIF_VALUE_DO_BOTTOM_HALF ==
+	      OPTEE_SMC_ASYNC_NOTIF_VALUE_DO_BOTTOM_HALF);
 
-// void thread_handle_fast_smc(struct thread_smc_args *args)
-// {
-// 	thread_check_canaries();
+void thread_handle_fast_smc(struct thread_smc_args *args)
+{
+	thread_check_canaries();
 
-// 	if (IS_ENABLED(CFG_NS_VIRTUALIZATION) &&
-// 	    virt_set_guest(args->a7)) {
-// 		args->a0 = OPTEE_SMC_RETURN_ENOTAVAIL;
-// 		goto out;
-// 	}
+	if (IS_ENABLED(CFG_NS_VIRTUALIZATION) &&
+	    virt_set_guest(args->a7)) {
+		args->a0 = OPTEE_SMC_RETURN_ENOTAVAIL;
+		goto out;
+	}
 
-// 	tee_entry_fast(args);
+	tee_entry_fast(args);
 
-// 	if (IS_ENABLED(CFG_NS_VIRTUALIZATION))
-// 		virt_unset_guest();
+	if (IS_ENABLED(CFG_NS_VIRTUALIZATION))
+		virt_unset_guest();
 
-// out:
-// 	/* Fast handlers must not unmask any exceptions */
-// 	assert(thread_get_exceptions() == THREAD_EXCP_ALL);
-// }
+out:
+	/* Fast handlers must not unmask any exceptions */
+	assert(thread_get_exceptions() == THREAD_EXCP_ALL);
+}
 
 uint32_t thread_handle_std_smc(uint32_t a0, uint32_t a1, uint32_t a2,
 			       uint32_t a3, uint32_t a4, uint32_t a5,

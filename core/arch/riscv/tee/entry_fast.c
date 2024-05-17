@@ -12,7 +12,11 @@
 #include <kernel/virtualization.h>
 #include <mm/core_mmu.h>
 #include <optee_msg.h>
+#ifndef TARGET_RISCV
 #include <sm/optee_smc.h>
+#else
+#include <sm/optee_sbi.h>
+#endif
 #include <tee/entry_fast.h>
 
 #ifdef CFG_CORE_RESERVED_SHM
@@ -320,5 +324,5 @@ void __weak tee_entry_get_os_revision(struct thread_smc_args *args)
 {
 	args->a0 = CFG_OPTEE_REVISION_MAJOR;
 	args->a1 = CFG_OPTEE_REVISION_MINOR;
-	args->a2 = TEE_IMPL_GIT_SHA1;
+	/* args->a2 = TEE_IMPL_GIT_SHA1; */
 }

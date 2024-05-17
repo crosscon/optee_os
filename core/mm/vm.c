@@ -204,7 +204,11 @@ static void set_um_region(struct user_mode_ctx *uctx, struct vm_region *r)
 
 	assert(!mobj_is_paged(r->mobj));
 
+#ifndef TARGET_RISCV
+	core_mmu_set_info_table(&ti, CORE_MMU_PGDIR_LEVEL, 0, NULL);
+#else
 	core_mmu_set_info_table(&ti, CORE_MMU_PGDIR_LEVEL + 1, 0, NULL);
+#endif
 
 	if (p) {
 		/* All the pgts are already allocated, update in place */
