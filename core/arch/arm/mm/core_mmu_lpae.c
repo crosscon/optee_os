@@ -275,7 +275,7 @@ struct mmu_partition {
 #endif
 };
 
-static struct mmu_partition default_partition __nex_data = {
+struct mmu_partition default_partition __nex_data = {
 	.base_tables = base_xlation_table,
 	.xlat_tables = xlat_tables,
 	.l2_ta_tables = xlat_tables_ul1,

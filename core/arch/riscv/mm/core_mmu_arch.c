@@ -68,7 +68,7 @@ struct mmu_partition {
 	unsigned int asid;
 };
 
-static struct mmu_partition default_partition __nex_data  = {
+struct mmu_partition default_partition __nex_data  = {
 	.root_pgt = &root_pgt,
 	.pool_pgts = pool_pgts,
 	.user_pgts = user_pgts,
