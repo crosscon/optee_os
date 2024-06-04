@@ -56,6 +56,4 @@ $(call force,CFG_TA_ASLR,n)
 $(call force,CFG_TA_FLOAT_SUPPORT,n)
 
 
-$(call force,CFG_TEE_TA_LOG_LEVEL,0)
-
 
