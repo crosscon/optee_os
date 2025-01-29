@@ -54,13 +54,13 @@ register_phys_mem_pgdir(MEM_AREA_IO_SEC,
 			ROUNDDOWN(CONSOLE_UART_BASE, CORE_MMU_PGDIR_SIZE),
 			CORE_MMU_PGDIR_SIZE);
 
-register_phys_mem_pgdir(MEM_AREA_IO_SEC,
-			ROUNDDOWN(GIC_BASE, CORE_MMU_PGDIR_SIZE),
-			CORE_MMU_PGDIR_SIZE);
+/* register_phys_mem_pgdir(MEM_AREA_IO_SEC, */
+/* 			ROUNDDOWN(GIC_BASE, CORE_MMU_PGDIR_SIZE), */
+/* 			CORE_MMU_PGDIR_SIZE); */
 
-register_phys_mem_pgdir(MEM_AREA_IO_SEC,
-			ROUNDDOWN(GIC_BASE + GICD_OFFSET, CORE_MMU_PGDIR_SIZE),
-			CORE_MMU_PGDIR_SIZE);
+/* register_phys_mem_pgdir(MEM_AREA_IO_SEC, */
+/* 			ROUNDDOWN(GIC_BASE + GICD_OFFSET, CORE_MMU_PGDIR_SIZE), */
+/* 			CORE_MMU_PGDIR_SIZE); */
 #if defined(CFG_ZYNQMP_CSU)
 register_phys_mem_pgdir(MEM_AREA_IO_SEC, CSU_BASE, CSU_SIZE);
 #endif
@@ -80,13 +80,13 @@ register_ddr(DRAM0_BASE, CFG_DDR_SIZE);
 void main_init_gic(void)
 {
 	/* On ARMv8, GIC configuration is initialized in ARM-TF */
-	gic_init_base_addr(&gic_data, GIC_BASE + GICC_OFFSET,
-			   GIC_BASE + GICD_OFFSET);
+	/* gic_init_base_addr(&gic_data, GIC_BASE + GICC_OFFSET, */
+	/* 		   GIC_BASE + GICD_OFFSET); */
 }
 
 void itr_core_handler(void)
 {
-	gic_it_handle(&gic_data);
+	/* gic_it_handle(&gic_data); */
 }
 
 void console_init(void)
